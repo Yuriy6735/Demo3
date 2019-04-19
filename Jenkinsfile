@@ -4,12 +4,17 @@ def label = "mypod"
 podTemplate(label: label, containers: [
   containerTemplate(name: 'python-alpine', image: 'python:3-alpine', command: 'cat', ttyEnabled: true),
   containerTemplate(name: 'zip', image: 'kramos/alpine-zip', command: 'cat', ttyEnabled: true)
+  containerTemplate(name: 'terraform', image: 'hashicorp/terraform', command: 'cat', ttyEnabled: true)
 ])
 {
 
     node(label)
     {
         try {
+            environment {
+                SVC_ACCOUNT_KEY = credentials('terraform-auth')
+            }
+
             stage('Clone repo'){
                 //git url: 'https://github.com/Yuriy6735/Demo3.git'
                 checkout([$class: 'GitSCM', branches: [[name: '*/test1']],
@@ -28,9 +33,50 @@ podTemplate(label: label, containers: [
                 container('zip'){
 
                     sh "zip -v"
-                    sh "zip -j test_jenkins.zip main.py requirements.txt"
+                    sh "zip -j app.zip main.py requirements.txt"
                 }
             }
+
+
+
+            stage('Checkout') {
+              steps {
+                //checkout scm
+                sh 'mkdir -p creds'
+                sh 'echo $SVC_ACCOUNT_KEY | base64 -d > ./creds/serviceaccount.json'
+              }
+            }
+
+            stage('TF Plan') {
+              steps {
+                container('terraform') {
+                  sh 'terraform init'
+                  sh 'terraform plan -out myplan'
+                }
+              }
+            }
+
+            //stage('Approval') {
+            //  steps {
+            //    script {
+            //      def userInput = input(id: 'confirm', message: 'Apply Terraform?', parameters: [ [$class: 'BooleanParameterDefinition', defaultValue: false, description: 'Apply terraform', name: 'confirm'] ])
+            //    }
+            //  }
+            //}
+
+            stage('TF Apply') {
+              steps {
+                container('terraform') {
+                  sh 'terraform apply -input=false myplan'
+                }
+              }
+            }
+
+
+
+
+
+
         }
         catch(err){
             currentBuild.result = 'Failure'
