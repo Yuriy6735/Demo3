@@ -13,13 +13,14 @@ podTemplate(label: label, containers: [
         try {
             stage('Deps') {
                 env.SVC_ACCOUNT_KEY = credentials('terraform-auth')
+                sh 'echo SVC_ACCOUNT_KEY'
             }
 
             stage('Clone repo'){
                 //git url: 'https://github.com/Yuriy6735/Demo3.git'
                 checkout([$class: 'GitSCM', branches: [[name: '*/test1']],
                     userRemoteConfigs: [[url: 'https://github.com/Yuriy6735/Demo3.git']]])
-                    sh 'ls'
+                    sh 'echo ${SVC_ACCOUNT_KEY}'
                 }
 
             stage("run in one container"){
@@ -45,7 +46,8 @@ podTemplate(label: label, containers: [
                 container('terraform'){
                 //checkout scm
                 sh 'mkdir -p creds'
-                sh 'export ${SVC_ACCOUNT_KEY} | base64 -d > ./creds/serviceaccount.json'
+                sh 'export ${SVC_ACCOUNT_KEY}
+                sh 'echo ${SVC_ACCOUNT_KEY} | base64 -d > ./creds/serviceaccount.json'
                 sh 'cat ./creds/serviceaccount.json'
                 }
             }
