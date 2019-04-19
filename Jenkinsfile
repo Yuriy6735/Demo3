@@ -17,12 +17,12 @@ podTemplate(label: label, containers: [
                 echo "My secret text is '${SVC_ACCOUNT_KEY}'"
            }
 
-           withEnv(["SVC_ACCOUNT_KEY = credentials('terraform-auth')"]){
-                stage('Build'){
-                    sh 'printenv'
-                    sh 'echo ${SVC_ACCOUNT_KEY}'
-                }
-           }
+           //withEnv(["SVC_ACCOUNT_KEY = credentials('terraform-auth')"]){
+           //     stage('Build'){
+           //         sh 'printenv'
+           //         sh 'echo ${SVC_ACCOUNT_KEY}'
+           //     }
+           //}
 
                 //stage('Deps') {
                 //    env.SVC_ACCOUNT_KEY = credentials('terraform-auth')
