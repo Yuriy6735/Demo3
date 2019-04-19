@@ -12,7 +12,7 @@ podTemplate(label: label, containers: [
     {
         try {
 
-           withCredentials([string(credentialsId: 'terraform-auth', variable: 'SVC_ACCOUNT_KEY')]) {
+           withCredentials([string(credentialsId: 'terraform', variable: 'SVC_ACCOUNT_KEY')]) {
            //set SECRET with the credential content
                 echo "My secret text is '${SVC_ACCOUNT_KEY}'"
            }
@@ -33,7 +33,6 @@ podTemplate(label: label, containers: [
                     //git url: 'https://github.com/Yuriy6735/Demo3.git'
                     checkout([$class: 'GitSCM', branches: [[name: '*/test1']],
                         userRemoteConfigs: [[url: 'https://github.com/Yuriy6735/Demo3.git']]])
-                        sh 'echo ${SVC_ACCOUNT_KEY}'
                     }
 
                 stage("run in one container"){
@@ -49,7 +48,6 @@ podTemplate(label: label, containers: [
 
                         sh "zip -v"
                         sh "zip -j app.zip main.py requirements.txt"
-                        sh 'ls'
                     }
                 }
 
@@ -59,8 +57,7 @@ podTemplate(label: label, containers: [
                     container('terraform'){
                     //checkout scm
                     sh 'mkdir -p creds'
-                    sh 'echo ${SVC_ACCOUNT_KEY} | base64 -d > ./creds/serviceaccount.json'
-                    sh 'cat ./creds/serviceaccount.json'
+                    sh 'cp \$SVC_ACCOUNT_KEY ./creds/serviceaccount.json'
                     }
                 }
 
@@ -68,7 +65,6 @@ podTemplate(label: label, containers: [
                     container('terraform') {
                       sh 'terraform init'
                       sh 'terraform plan -out myplan'
-                      sh 'ls'
 
                     }
                 }
