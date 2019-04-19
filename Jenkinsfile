@@ -56,10 +56,12 @@ podTemplate(label: label, containers: [
                     //set SECRET with the credential content
                         sh 'ls -al $SVC_ACCOUNT_KEY'
                         echo "My secret text is '${SVC_ACCOUNT_KEY}'"
+                        sh 'mkdir -p creds'
+                        sh "cp \$SVC_ACCOUNT_KEY ./creds/serviceaccount.json"
                     }
                     //checkout scm
                     //sh 'mkdir -p creds'
-                    sh "cp \$SVC_ACCOUNT_KEY /creds/serviceaccount.json"
+                    //sh "cp \$SVC_ACCOUNT_KEY /creds/serviceaccount.json"
                     }
                 }
 
