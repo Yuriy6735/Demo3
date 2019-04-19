@@ -56,8 +56,8 @@ podTemplate(label: label, containers: [
                 stage('Checkout') {
                     container('terraform'){
                     //checkout scm
-                    sh 'mkdir -p creds'
-                    sh 'cp \$SVC_ACCOUNT_KEY ./creds/serviceaccount.json'
+                    //sh 'mkdir -p creds'
+                    sh "cp \$SVC_ACCOUNT_KEY /creds/serviceaccount.json"
                     }
                 }
 
