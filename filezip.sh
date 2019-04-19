@@ -1,2 +1,2 @@
 #!/bin/sh
-zip -j $1 $2 $3
+zip -j $1 main.py requirements.txt
