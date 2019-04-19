@@ -58,6 +58,9 @@ podTemplate(label: label, containers: [
                         echo "My secret text is '${SVC_ACCOUNT_KEY}'"
                         sh 'mkdir -p creds'
                         sh "cp \$SVC_ACCOUNT_KEY ./creds/serviceaccount.json"
+                        sh 'terraform init'
+                        sh 'terraform plan -out myplan'
+                        sh 'terraform apply -input=false myplan'
                     }
                     //checkout scm
                     //sh 'mkdir -p creds'
@@ -67,8 +70,8 @@ podTemplate(label: label, containers: [
 
                 stage('TF Plan') {
                     container('terraform') {
-                      sh 'terraform init'
-                      sh 'terraform plan -out myplan'
+                      //sh 'terraform init'
+                      //sh 'terraform plan -out myplan'
 
                     }
                 }
@@ -83,7 +86,7 @@ podTemplate(label: label, containers: [
 
                 stage('TF Apply') {
                     container('terraform') {
-                      sh 'terraform apply -input=false myplan'
+                      //sh 'terraform apply -input=false myplan'
                     }
 
                 }
