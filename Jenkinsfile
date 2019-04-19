@@ -11,6 +11,12 @@ podTemplate(label: label, containers: [
     node(label)
     {
         try {
+
+           withCredentials([string(credentialsId: 'terraform-auth', variable: 'SVC_ACCOUNT_KEY') {
+           //set SECRET with the credential content
+                echo "My secret text is '${SVC_ACCOUNT_KEY}'"
+           }
+
            withEnv(["SVC_ACCOUNT_KEY = credentials('terraform-auth')"]){
                 stage('Build'){
                     sh 'printenv'
