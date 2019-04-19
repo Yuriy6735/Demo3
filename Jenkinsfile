@@ -46,7 +46,7 @@ podTemplate(label: label, containers: [
                 container('terraform'){
                 //checkout scm
                 sh 'mkdir -p creds'
-                sh 'export ${SVC_ACCOUNT_KEY}
+                sh 'export ${SVC_ACCOUNT_KEY}'
                 sh 'echo ${SVC_ACCOUNT_KEY} | base64 -d > ./creds/serviceaccount.json'
                 sh 'cat ./creds/serviceaccount.json'
                 }
