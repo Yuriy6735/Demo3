@@ -19,6 +19,7 @@ podTemplate(label: label, containers: [
                 //git url: 'https://github.com/Yuriy6735/Demo3.git'
                 checkout([$class: 'GitSCM', branches: [[name: '*/test1']],
                     userRemoteConfigs: [[url: 'https://github.com/Yuriy6735/Demo3.git']]])
+                    sh 'ls'
                 }
 
             stage("run in one container"){
@@ -34,6 +35,7 @@ podTemplate(label: label, containers: [
 
                     sh "zip -v"
                     sh "zip -j app.zip main.py requirements.txt"
+                    sh 'ls'
                 }
             }
 
@@ -44,6 +46,7 @@ podTemplate(label: label, containers: [
                 //checkout scm
                 sh 'mkdir -p creds'
                 sh 'export ${SVC_ACCOUNT_KEY} | base64 -d > ./creds/serviceaccount.json'
+                sh 'ls'
                 }
             }
 
@@ -51,6 +54,7 @@ podTemplate(label: label, containers: [
                 container('terraform') {
                   sh 'terraform init'
                   sh 'terraform plan -out myplan'
+                  sh 'ls'
 
                 }
             }
