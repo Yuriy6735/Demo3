@@ -12,7 +12,7 @@ podTemplate(label: label, containers: [
     {
         try {
 
-           withCredentials([string(credentialsId: 'terraform-auth', variable: 'SVC_ACCOUNT_KEY') {
+           withCredentials([string(credentialsId: 'terraform-auth', variable: 'SVC_ACCOUNT_KEY')]) {
            //set SECRET with the credential content
                 echo "My secret text is '${SVC_ACCOUNT_KEY}'"
            }
