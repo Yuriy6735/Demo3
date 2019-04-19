@@ -1,6 +1,6 @@
 # Configure the GCP Provider
 provider "google" {
-  credentials = "./creds/first-project-7961f812579a.json"
+  credentials = "creds/first-project-7961f812579a.json"
   region = "europe-west1"
   project = "project1-232817"
 }
