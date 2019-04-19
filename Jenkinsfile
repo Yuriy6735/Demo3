@@ -11,7 +11,9 @@ podTemplate(label: label, containers: [
     {
         try {
             stage('Clone repo'){
-                git url: 'https://github.com/Yuriy6735/Demo3.git'
+                //git url: 'https://github.com/Yuriy6735/Demo3.git'
+                checkout([$class: 'GitSCM', branches: [[name: '*/test1']],
+                    userRemoteConfigs: [[url: 'https://github.com/Yuriy6735/Demo3.git']]])
                 }
 
             stage("run in one container"){
