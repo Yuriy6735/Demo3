@@ -51,11 +51,11 @@ podTemplate(label: label, containers: [
 
 
                 stage('Checkout') {
+                    container('terraform'){
                     withCredentials([file(credentialsId: 'terraform', variable: 'SVC_ACCOUNT_KEY')]) {
                     //set SECRET with the credential content
                         echo "My secret text is '${SVC_ACCOUNT_KEY}'"
                     }
-                    container('terraform'){
                     //checkout scm
                     //sh 'mkdir -p creds'
                     sh "cp \$SVC_ACCOUNT_KEY /creds/serviceaccount.json"
