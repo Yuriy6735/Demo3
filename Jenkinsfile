@@ -11,8 +11,8 @@ podTemplate(label: label, containers: [
     node(label)
     {
         try {
-            environment {
-                SVC_ACCOUNT_KEY = credentials('terraform-auth')
+            stage('Deps') {
+                env.SVC_ACCOUNT_KEY = credentials('terraform-auth')
             }
 
             stage('Clone repo'){
@@ -40,20 +40,19 @@ podTemplate(label: label, containers: [
 
 
             stage('Checkout') {
-              steps {
+                container('terraform'){
                 //checkout scm
                 sh 'mkdir -p creds'
-                sh 'echo $SVC_ACCOUNT_KEY | base64 -d > ./creds/serviceaccount.json'
-              }
+                sh 'echo ${SVC_ACCOUNT_KEY} | base64 -d > ./creds/serviceaccount.json'
+                }
             }
 
             stage('TF Plan') {
-              steps {
                 container('terraform') {
                   sh 'terraform init'
                   sh 'terraform plan -out myplan'
+
                 }
-              }
             }
 
             //stage('Approval') {
@@ -65,11 +64,10 @@ podTemplate(label: label, containers: [
             //}
 
             stage('TF Apply') {
-              steps {
                 container('terraform') {
                   sh 'terraform apply -input=false myplan'
                 }
-              }
+
             }
 
 
