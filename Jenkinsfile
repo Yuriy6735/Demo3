@@ -54,6 +54,7 @@ podTemplate(label: label, containers: [
                     container('terraform'){
                     withCredentials([file(credentialsId: 'terraform', variable: 'SVC_ACCOUNT_KEY')]) {
                     //set SECRET with the credential content
+                        sh 'ls -al $SVC_ACCOUNT_KEY'
                         echo "My secret text is '${SVC_ACCOUNT_KEY}'"
                     }
                     //checkout scm
