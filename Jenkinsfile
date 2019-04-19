@@ -46,7 +46,7 @@ podTemplate(label: label, containers: [
                 //checkout scm
                 sh 'mkdir -p creds'
                 sh 'export ${SVC_ACCOUNT_KEY} | base64 -d > ./creds/serviceaccount.json'
-                sh 'ls'
+                sh 'cat ./creds/serviceaccount.json'
                 }
             }
 
