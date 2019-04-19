@@ -12,10 +12,7 @@ podTemplate(label: label, containers: [
     {
         try {
 
-           withCredentials([file(credentialsId: 'terraform', variable: 'SVC_ACCOUNT_KEY')]) {
-           //set SECRET with the credential content
-                echo "My secret text is '${SVC_ACCOUNT_KEY}'"
-           }
+
 
            //withEnv(["SVC_ACCOUNT_KEY = credentials('terraform-auth')"]){
            //     stage('Build'){
@@ -54,6 +51,10 @@ podTemplate(label: label, containers: [
 
 
                 stage('Checkout') {
+                    withCredentials([file(credentialsId: 'terraform', variable: 'SVC_ACCOUNT_KEY')]) {
+                    //set SECRET with the credential content
+                        echo "My secret text is '${SVC_ACCOUNT_KEY}'"
+                    }
                     container('terraform'){
                     //checkout scm
                     //sh 'mkdir -p creds'
