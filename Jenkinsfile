@@ -13,7 +13,7 @@ podTemplate(label: label, containers: [
         try {
            withEnv(['SVC_ACCOUNT_KEY = credentials('terraform-auth')']){
                 stage('Build'){
-                sh 'printenv'
+                    sh 'printenv'
                 }
            }
 
