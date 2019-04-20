@@ -8,13 +8,11 @@ provider "google" {
 resource "google_storage_bucket" "bucket" {
   name = "superdemo3"
   location = "EU"
-  force_destroy = true
-
 }
 
 resource "google_storage_bucket_object" "app" {
   name = "app.zip"
-  bucket = "${google_storage_bucket.bucket.name}"
+  bucket = "superdemo3"
   source = "./app.zip"
 
 }
