@@ -8,6 +8,7 @@ provider "google" {
 resource "google_storage_bucket" "bucket" {
   name = "superdemo3"
   location = "EU"
+  force_destroy = true
 
 }
 
@@ -31,5 +32,6 @@ resource "google_cloudfunctions_function" "get-data" {
   labels = {
     my-label = "my-label-value"
   }
+  force_destroy = true
 
 }
