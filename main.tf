@@ -13,7 +13,10 @@ provider "google" {
 
 resource "google_storage_bucket_object" "app" {
   name = "app.zip"
-  bucket = "https://console.cloud.google.com/storage/browser/superdemo3"
+  bucket = {
+    url = "gs://<bucket-name>"
+  }
+//  "${google_storage_bucket.bucket.name}"
   source = "./app.zip"
 
 }
@@ -22,7 +25,10 @@ resource "google_cloudfunctions_function" "get-data" {
   name                  = "get-data"
   description           = "My weather"
   available_memory_mb   = 256
-  source_archive_bucket = "https://console.cloud.google.com/storage/browser/superdemo3"
+  source_archive_bucket = {
+    url = "gs://<bucket-name>"
+  }
+//  "${google_storage_bucket.bucket.name}"
   source_archive_object = "${google_storage_bucket_object.app.name}"
   trigger_http          = true
   timeout               = 60
