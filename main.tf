@@ -32,6 +32,5 @@ resource "google_cloudfunctions_function" "get-data" {
   labels = {
     my-label = "my-label-value"
   }
-  force_destroy = true
 
 }
