@@ -1,3 +1,3 @@
 
-def test_jenkins(request):
-    return "Jenkins working!"
+# def test_jenkins(request):
+#     return "Jenkins working!"
