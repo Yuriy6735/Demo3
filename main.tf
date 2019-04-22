@@ -44,6 +44,6 @@ terraform {
   backend "gcs" {
     bucket = "tfdemo3st"
     prefix = "demo"
-//    credentials = "./creds/first-project-7961f812579a.json"
+    credentials = "./creds/first-project-7961f812579a.json"
   }
 }
