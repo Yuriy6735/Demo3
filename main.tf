@@ -1,6 +1,6 @@
 # Configure the GCP Provider
 provider "google" {
-  credentials = "${file("./creds/first-project-7961f812579a.json")}"
+//  credentials = "${file("./creds/first-project-7961f812579a.json")}"
   region = "europe-west1"
   project = "project1-232817"
 }
@@ -44,6 +44,6 @@ terraform {
   backend "gcs" {
     bucket = "tfdemo3st"
     prefix = "demo"
-    credentials = "./creds/first-project-7961f812579a.json"
+//    credentials = "./creds/first-project-7961f812579a.json"
   }
 }

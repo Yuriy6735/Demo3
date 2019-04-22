@@ -1,9 +1,8 @@
-def label = "mypod"
+def label = "jenpod"
 
 
 podTemplate(label: label, containers: [
   containerTemplate(name: 'python-alpine', image: 'python:3-alpine', command: 'cat', ttyEnabled: true),
-  containerTemplate(name: 'zip', image: 'kramos/alpine-zip', command: 'cat', ttyEnabled: true),
   containerTemplate(name: 'terraform', image: 'hashicorp/terraform', command: 'cat', ttyEnabled: true)
 ])
 {
@@ -12,76 +11,47 @@ podTemplate(label: label, containers: [
     {
         try {
 
-
-
-           //withEnv(["SVC_ACCOUNT_KEY = credentials('terraform-auth')"]){
-           //     stage('Build'){
-           //         sh 'printenv'
-           //         sh 'echo ${SVC_ACCOUNT_KEY}'
-           //     }
-           //}
-
-                //stage('Deps') {
-                //    env.SVC_ACCOUNT_KEY = credentials('terraform-auth')
-                //    sh 'echo SVC_ACCOUNT_KEY'
-                //}
-
-                stage('Clone repo'){
-                    //git url: 'https://github.com/Yuriy6735/Demo3.git'
-                    checkout([$class: 'GitSCM', branches: [[name: '*/test1']],
-                        userRemoteConfigs: [[url: 'https://github.com/Yuriy6735/Demo3.git']]])
-                    }
-
-                stage("run in one container"){
-                    container("python-alpine"){
-                        sh "python --version"
-                        sh "python unit-test.py"
-                        // and other commands to run
-                    }
+            stage('Clone repo'){
+                //git url: 'https://github.com/Yuriy6735/Demo3.git'
+                checkout([$class: 'GitSCM', branches: [[name: '*/test1']],
+                    userRemoteConfigs: [[url: 'https://github.com/Yuriy6735/Demo3.git']]])
                 }
 
-
-
-
-                stage('Checkout') {
-                    container('terraform'){
-                    withCredentials([file(credentialsId: 'terraform', variable: 'SVC_ACCOUNT_KEY')]) {
-                    //set SECRET with the credential content
-                        sh 'ls -al $SVC_ACCOUNT_KEY'
-                        echo "My secret text is '${SVC_ACCOUNT_KEY}'"
-                        sh 'mkdir -p creds'
-                        sh "cp \$SVC_ACCOUNT_KEY ./creds/first-project-7961f812579a.json"
-                    }
-                    //checkout scm
-                    //sh 'mkdir -p creds'
-                    //sh "cp \$SVC_ACCOUNT_KEY /creds/serviceaccount.json"
-                    }
+            stage("run unit test to app"){
+                container("python-alpine"){
+                    sh "python --version"
+                    sh "python unit-test.py"
                 }
+            }
 
-                stage('TF Plan') {
-                    container('terraform') {
-                      sh 'terraform init'
-                      sh 'terraform plan -out myplan'
 
-                    }
+            stage('Checkout Terraform') {
+                container('terraform'){
+                withCredentials([file(credentialsId: 'terraform', variable: 'SVC_ACCOUNT_KEY')]) {
+                //set SECRET with the credential content
+                    sh 'ls -al $SVC_ACCOUNT_KEY'
+                    echo "My secret text is '${SVC_ACCOUNT_KEY}'"
+                    sh 'mkdir -p creds'
+                    sh "cp \$SVC_ACCOUNT_KEY ./creds/first-project-7961f812579a.json"
                 }
+                }
+            }
 
-                //stage('Approval') {
-                //  steps {
-                //    script {
-                //      def userInput = input(id: 'confirm', message: 'Apply Terraform?', parameters: [ [$class: 'BooleanParameterDefinition', defaultValue: false, description: 'Apply terraform', name: 'confirm'] ])
-                //    }
-                //  }
-                //}
-
-                stage('TF Apply') {
-                    container('terraform') {
-                      sh 'terraform apply -input=false myplan'
-                    }
+            stage('TF Plan') {
+                container('terraform') {
+                  sh 'terraform init'
+                  sh 'terraform plan -out myplan'
 
                 }
+            }
 
 
+            stage('TF Apply') {
+                container('terraform') {
+                  sh 'terraform apply -input=false myplan'
+                }
+
+            }
 
 
 
