@@ -38,6 +38,7 @@ data "terraform_remote_state" "tfstate"{
   backend = "gcs"
   config {
     bucket = "tfdemo3st"
-    prefix = "prod"
+    prefix = "demo"
+    credentials = "${file("./creds/first-project-7961f812579a.json")}"
   }
 }
