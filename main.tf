@@ -11,11 +11,16 @@ resource "google_storage_bucket" "bucket" {
 
 }
 
+data "archive_file" "function_app" {
+  type        = "zip"
+  source_dir  = "./app"
+  output_path = "app.zip"
+}
+
 resource "google_storage_bucket_object" "app" {
-  name = "app.zip"
+  name   = "app.${data.archive_file.function_app.output_base64sha256}.zip"
   bucket = "${google_storage_bucket.bucket.name}"
   source = "./app.zip"
-
 }
 
 resource "google_cloudfunctions_function" "get-data" {
@@ -39,6 +44,6 @@ terraform {
   backend "gcs" {
     bucket = "tfdemo3st"
     prefix = "demo"
-    credentials = "${file("./creds/first-project-7961f812579a.json")}"
+    credentials = "./creds/first-project-7961f812579a.json"
   }
 }
