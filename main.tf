@@ -33,3 +33,11 @@ resource "google_cloudfunctions_function" "get-data" {
   }
 
 }
+
+data "terraform_remote_state" "tfstate"{
+  backend = "gcs"
+  config {
+    bucket = "tfdemo3st"
+    prefix = "prod"
+  }
+}
