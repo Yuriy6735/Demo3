@@ -34,9 +34,9 @@ resource "google_cloudfunctions_function" "get-data" {
 
 }
 
-data "terraform_remote_state" "tfstate"{
-  backend = "gcs"
-  config {
+
+terraform {
+  backend "gcs" {
     bucket = "tfdemo3st"
     prefix = "demo"
     credentials = "${file("./creds/first-project-7961f812579a.json")}"
