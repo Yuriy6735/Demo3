@@ -17,12 +17,12 @@ podTemplate(label: label, containers: [
                     userRemoteConfigs: [[url: 'https://github.com/Yuriy6735/Demo3.git']]])
                 }
 
-            stage("run unit test to app"){
-                container("python-alpine"){
-                    sh "python --version"
-                    sh "python unit-test.py"
-                }
-            }
+            //stage("run unit test to app"){
+            //    container("python-alpine"){
+            //        sh "python --version"
+            //        sh "python unit-test.py"
+            //    }
+            //}
 
 
             stage('Checkout Terraform') {
