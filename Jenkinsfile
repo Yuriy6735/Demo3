@@ -36,6 +36,7 @@ podTemplate(label: label, containers: [
                                  string(credentialsId: 'TF_VAR_MONGODB_ROOT_PASSWORD', variable: 'TF_VAR_MONGODB_ROOT_PASSWORD')
                              ]) {
                 //set SECRET with the credential content
+                    sh 'env'
                     sh 'ls -al $GOOGLE_CREDENTIALS'
                     echo "My secret text is '${GOOGLE_CREDENTIALS}'"
                     sh 'mkdir -p creds'
