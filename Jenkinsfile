@@ -27,12 +27,19 @@ podTemplate(label: label, containers: [
 
             stage('Checkout Terraform') {
                 container('terraform'){
-                withCredentials([file(credentialsId: 'terraform', variable: 'SVC_ACCOUNT_KEY')]) {
+                withCredentials([file(credentialsId: 'terraform', variable: 'GOOGLE_CREDENTIALS'),
+                                 string(credentialsId: 'TF_VAR_password', variable: 'TF_VAR_password'),
+                                 string(credentialsId: 'TF_VAR_MONGODB_PASSWORD', variable: 'TF_VAR_MONGODB_PASSWORD'),
+                                 string(credentialsId: 'TF_VAR_API', variable: 'TF_VAR_API'),
+                                 string(credentialsId: 'TF_VAR_bucket', variable: 'TF_VAR_bucket'),
+                                 string(credentialsId: 'TF_VAR_project', variable: 'TF_VAR_project'),
+                                 string(credentialsId: 'TF_VAR_MONGODB_ROOT_PASSWORD', variable: 'TF_VAR_MONGODB_ROOT_PASSWORD')
+                             ]) {
                 //set SECRET with the credential content
-                    sh 'ls -al $SVC_ACCOUNT_KEY'
-                    echo "My secret text is '${SVC_ACCOUNT_KEY}'"
+                    sh 'ls -al $GOOGLE_CREDENTIALS'
+                    echo "My secret text is '${GOOGLE_CREDENTIALS}'"
                     sh 'mkdir -p creds'
-                    sh "cp \$SVC_ACCOUNT_KEY ./creds/first-project-7961f812579a.json"
+                    sh "cp \$GOOGLE_CREDENTIALS ./creds/d3tf-b894abb5e1c0.json"
                 }
                 }
             }
