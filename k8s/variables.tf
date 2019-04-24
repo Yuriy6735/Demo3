@@ -21,7 +21,7 @@ variable "MONGODB_USERNAME" {
 
 variable "MONGODB_PASSWORD" {}
 variable "MONGODB_ROOT_PASSWORD" {}
-variable "api_telegram" {}
+//variable "api_telegram" {}
 
 
 
