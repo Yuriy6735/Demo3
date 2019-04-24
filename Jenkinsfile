@@ -45,7 +45,7 @@ podTemplate(label: label, containers: [
                     sh 'terraform init'
                     //sh 'terraform plan -out myplan'
                     //sh 'terraform apply -auto-approve -input=false myplan'
-                    sh 'terraform destroy -auto-approve -input=false myplan'
+                    sh 'terraform destroy -auto-approve -input=false'
                 }
                 }
             }
