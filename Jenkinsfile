@@ -10,24 +10,7 @@ podTemplate(label: label, containers: [
     node(label)
     {
         try {
-
-            stage('Clone repo'){
-                //git url: 'https://github.com/Yuriy6735/Demo3.git'
-                checkout([$class: 'GitSCM', branches: [[name: '*/test1']],
-                    userRemoteConfigs: [[url: 'https://github.com/Yuriy6735/Demo3.git']]])
-                }
-
-            //stage("run unit test to app"){
-            //    container("python-alpine"){
-            //        sh "python --version"
-            //        sh "python unit-test.py"
-            //    }
-            //}
-
-
-            stage('Checkout Terraform') {
-                container('terraform'){
-                withCredentials([file(credentialsId: 'terraform', variable: 'GOOGLE_CREDENTIALS'),
+            withCredentials([file(credentialsId: 'terraform', variable: 'GOOGLE_CREDENTIALS'),
                                  string(credentialsId: 'TF_VAR_password', variable: 'TF_VAR_password'),
                                  string(credentialsId: 'TF_VAR_api_telegram', variable: 'TF_VAR_api_telegram'),
                                  string(credentialsId: 'TF_VAR_MONGODB_PASSWORD', variable: 'TF_VAR_MONGODB_PASSWORD'),
@@ -36,18 +19,36 @@ podTemplate(label: label, containers: [
                                  string(credentialsId: 'TF_VAR_project', variable: 'TF_VAR_project'),
                                  string(credentialsId: 'TF_VAR_MONGODB_ROOT_PASSWORD', variable: 'TF_VAR_MONGODB_ROOT_PASSWORD')
                              ]) {
-                //set SECRET with the credential content
-                    sh 'env'
-                    sh 'ls -al $GOOGLE_CREDENTIALS'
-                    echo "My secret text is '${GOOGLE_CREDENTIALS}'"
-                    sh 'mkdir -p creds'
-                    sh "cp \$GOOGLE_CREDENTIALS ./creds/d3tf-b894abb5e1c0.json"
-                    sh 'terraform init'
-                    //sh 'terraform plan -out myplan'
-                    //sh 'terraform apply -auto-approve -input=false myplan'
-                    sh 'terraform destroy -auto-approve -input=false'
-                }
-                }
+
+                stage('Clone repo'){
+                    //git url: 'https://github.com/Yuriy6735/Demo3.git'
+                    checkout([$class: 'GitSCM', branches: [[name: '*/test1']],
+                        userRemoteConfigs: [[url: 'https://github.com/Yuriy6735/Demo3.git']]])
+                    }
+
+                //stage("run unit test to app"){
+                //    container("python-alpine"){
+                //        sh "python --version"
+                //        sh "python unit-test.py"
+                //    }
+                //}
+
+
+                stage('Checkout Terraform') {
+                    container('terraform'){
+
+                    //set SECRET with the credential content
+                        sh 'env'
+                        sh 'ls -al $GOOGLE_CREDENTIALS'
+                        echo "My secret text is '${GOOGLE_CREDENTIALS}'"
+                        sh 'mkdir -p creds'
+                        sh "cp \$GOOGLE_CREDENTIALS ./creds/d3tf-b894abb5e1c0.json"
+                        sh 'terraform init'
+                        //sh 'terraform plan -out myplan'
+                        //sh 'terraform apply -auto-approve -input=false myplan'
+                        sh 'terraform destroy -auto-approve -input=false'
+                    }
+                    }
             }
 
 
