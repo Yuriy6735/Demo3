@@ -44,9 +44,9 @@ podTemplate(label: label, containers: [
                         sh 'mkdir -p creds'
                         sh "cp \$GOOGLE_CREDENTIALS ./creds/d3tf-b894abb5e1c0.json"
                         sh 'terraform init'
-                        sh 'terraform plan -out myplan'
-                        sh 'terraform apply -auto-approve -input=false myplan'
-                        //sh 'terraform destroy -auto-approve -input=false'
+                        //sh 'terraform plan -out myplan'
+                        //sh 'terraform apply -auto-approve -input=false myplan'
+                        sh 'terraform destroy -auto-approve -input=false'
                     }
                     }
             }
