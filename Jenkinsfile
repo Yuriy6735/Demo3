@@ -32,10 +32,10 @@ podTemplate(label: label, containers: [
                         sh "python3 --version"
                         sh "python3 ./functions/app/test.py"
                         sh "python3 ./functions/currentTemp/test.py"
-                        sh "python3 ./functions/get-from-db/test.py"
-                        sh "python3 ./functions/get-predictions/test.py"
-                        sh "python3 ./functions/save-to-db/test.py"
-                        sh "python3 ./functions/to-zamb/test.py"
+                        sh "python3 ./functions/getFromDB/test.py"
+                        sh "python3 ./functions/getPredictions/test.py"
+                        sh "python3 ./functions/saveToDB/test.py"
+                        sh "python3 ./functions/toZamb/test.py"
                         //sh "python3 ./functions/zamb/test.py"
                     }
                 }

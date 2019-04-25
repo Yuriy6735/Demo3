@@ -21,16 +21,16 @@ resource "google_storage_bucket_object" "app" {
   source = "./functions/app/app.zip"
 }
 
-data "archive_file" "save-to-db" {
+data "archive_file" "saveToDB" {
   type        = "zip"
-  source_dir  = "./functions/save-to-db/save-to-db"
-  output_path = "./functions/save-to-db/save-to-db.zip"
+  source_dir  = "./functions/saveToDB/saveToDB"
+  output_path = "./functions/saveToDB/saveToDB.zip"
 }
 
-resource "google_storage_bucket_object" "save-to-db" {
-  name   = "save-to-db.${data.archive_file.save-to-db.output_base64sha256}.zip"
+resource "google_storage_bucket_object" "saveToDB" {
+  name   = "saveToDB.${data.archive_file.saveToDB.output_base64sha256}.zip"
   bucket = "${google_storage_bucket.bucket.name}"
-  source = "./functions/save-to-db/save-to-db.zip"
+  source = "./functions/saveToDB/saveToDB.zip"
 }
 
 data "archive_file" "currentTemp" {
@@ -57,52 +57,52 @@ resource "google_storage_bucket_object" "zamb" {
   source = "./functions/zamb/zamb.zip"
 }
 
-data "archive_file" "to-zamb" {
+data "archive_file" "toZamb" {
   type        = "zip"
-  source_dir  = "./functions/to-zamb/to-zamb"
-  output_path = "./functions/to-zamb/to-zamb.zip"
+  source_dir  = "./functions/toZamb/toZamb"
+  output_path = "./functions/toZamb/toZamb.zip"
 }
 
-resource "google_storage_bucket_object" "to-zamb" {
-  name   = "to-zamb.${data.archive_file.to-zamb.output_base64sha256}.zip"
+resource "google_storage_bucket_object" "toZamb" {
+  name   = "toZamb.${data.archive_file.toZamb.output_base64sha256}.zip"
   bucket = "${google_storage_bucket.bucket.name}"
-  source = "./functions/to-zamb/to-zamb.zip"
+  source = "./functions/toZamb/toZamb.zip"
 }
 
-data "archive_file" "get-from-db" {
+data "archive_file" "getFromDB" {
   type        = "zip"
-  source_dir  = "./functions/get-from-db/get-from-db"
-  output_path = "./functions/get-from-db/get-from-db.zip"
+  source_dir  = "./functions/getFromDB/getFromDB"
+  output_path = "./functions/getFromDB/getFromDB.zip"
 }
 
-resource "google_storage_bucket_object" "get-from-db" {
-  name   = "get-from-db.${data.archive_file.get-from-db.output_base64sha256}.zip"
+resource "google_storage_bucket_object" "getFromDB" {
+  name   = "getFromDB.${data.archive_file.getFromDB.output_base64sha256}.zip"
   bucket = "${google_storage_bucket.bucket.name}"
-  source = "./functions/get-from-db/get-from-db.zip"
+  source = "./functions/getFromDB/getFromDB.zip"
 }
 
-data "archive_file" "api-to-tf" {
+data "archive_file" "apiToTF" {
   type        = "zip"
-  source_dir  = "./functions/api-to-tf/api-to-tf"
-  output_path = "./functions/api-to-tf/api-to-tf.zip"
+  source_dir  = "./functions/apiToTF/apiToTF"
+  output_path = "./functions/apiToTF/apiToTF.zip"
 }
 
-resource "google_storage_bucket_object" "api-to-tf" {
-  name   = "api-to-tf.${data.archive_file.api-to-tf.output_base64sha256}.zip"
+resource "google_storage_bucket_object" "apiToTF" {
+  name   = "apiToTF.${data.archive_file.apiToTF.output_base64sha256}.zip"
   bucket = "${google_storage_bucket.bucket.name}"
-  source = "./functions/api-to-tf/api-to-tf.zip"
+  source = "./functions/apiToTF/apiToTF.zip"
 }
 
-data "archive_file" "get-predictions" {
+data "archive_file" "getPredictions" {
   type        = "zip"
-  source_dir  = "./functions/get-predictions/get-predictions"
-  output_path = "./functions/get-predictions/get-predictions.zip"
+  source_dir  = "./functions/getPredictions/getPredictions"
+  output_path = "./functions/getPredictions/getPredictions.zip"
 }
 
-resource "google_storage_bucket_object" "get-predictions" {
-  name   = "get-predictions.${data.archive_file.get-predictions.output_base64sha256}.zip"
+resource "google_storage_bucket_object" "getPredictions" {
+  name   = "getPredictions.${data.archive_file.getPredictions.output_base64sha256}.zip"
   bucket = "${google_storage_bucket.bucket.name}"
-  source = "./functions/get-predictions/get-predictions.zip"
+  source = "./functions/getPredictions/getPredictions.zip"
 }
 
 resource "google_cloudfunctions_function" "get-data" {
@@ -137,12 +137,12 @@ resource "google_pubsub_topic" "topic3" {
   name = "topic3"
 }
 
-resource "google_cloudfunctions_function" "save-to-db" {
-  name                  = "save-to-db"
+resource "google_cloudfunctions_function" "saveToDB" {
+  name                  = "saveToDB"
   description           = "My weather"
   available_memory_mb   = 256
   source_archive_bucket = "${google_storage_bucket.bucket.name}"
-  source_archive_object = "${google_storage_bucket_object.save-to-db.name}"
+  source_archive_object = "${google_storage_bucket_object.saveToDB.name}"
   timeout               = 60
   runtime               = "python37"
   entry_point           = "message_from_topic1"
@@ -205,12 +205,12 @@ resource "google_cloudfunctions_function" "zamb" {
 
 }
 
-resource "google_cloudfunctions_function" "to-zamb" {
-  name                  = "to-zamb"
+resource "google_cloudfunctions_function" "toZamb" {
+  name                  = "toZamb"
   description           = "My weather"
   available_memory_mb   = 256
   source_archive_bucket = "${google_storage_bucket.bucket.name}"
-  source_archive_object = "${google_storage_bucket_object.to-zamb.name}"
+  source_archive_object = "${google_storage_bucket_object.toZamb.name}"
   timeout               = 60
   runtime               = "python37"
   entry_point           = "message_from_topic2"
@@ -243,8 +243,8 @@ resource "google_cloud_scheduler_job" "api-job" {
 }
 
 
-resource "google_cloudfunctions_function" "get-from-db" {
-  name = "get-from-db"
+resource "google_cloudfunctions_function" "getFromDB" {
+  name = "getFromDB"
   description = "Fetching from MongoDB"
   available_memory_mb = 128
   trigger_http = true
@@ -252,7 +252,7 @@ resource "google_cloudfunctions_function" "get-from-db" {
   entry_point = "get_from_db"
   runtime = "python37"
   source_archive_bucket = "${google_storage_bucket.bucket.name}"
-  source_archive_object = "${google_storage_bucket_object.get-from-db.name}"
+  source_archive_object = "${google_storage_bucket_object.getFromDB.name}"
   environment_variables = {
     user_name = "${var.MONGODB_USERNAME}"
     user_pass = "${var.MONGODB_PASSWORD}"
@@ -260,8 +260,8 @@ resource "google_cloudfunctions_function" "get-from-db" {
   }
 }
 
-resource "google_cloudfunctions_function" "api-to-tf" {
-  name = "api-to-tf"
+resource "google_cloudfunctions_function" "apiToTF" {
+  name = "apiToTF"
   description = "api_to_TF"
   available_memory_mb = 128
   trigger_http = true
@@ -269,13 +269,13 @@ resource "google_cloudfunctions_function" "api-to-tf" {
   entry_point = "data_to_predict"
   runtime = "python37"
   source_archive_bucket = "${google_storage_bucket.bucket.name}"
-  source_archive_object = "${google_storage_bucket_object.api-to-tf.name}"
+  source_archive_object = "${google_storage_bucket_object.apiToTF.name}"
 
 }
 
 
-resource "google_cloudfunctions_function" "get-predictions" {
-  name = "get-predictions"
+resource "google_cloudfunctions_function" "getPredictions" {
+  name = "getPredictions"
   description = "Fetching from MongoDB"
   available_memory_mb = 128
   trigger_http = true
@@ -283,11 +283,11 @@ resource "google_cloudfunctions_function" "get-predictions" {
   entry_point = "get_predictions"
   runtime = "python37"
   source_archive_bucket = "${google_storage_bucket.bucket.name}"
-  source_archive_object = "${google_storage_bucket_object.get-predictions.name}"
+  source_archive_object = "${google_storage_bucket_object.getPredictions.name}"
   environment_variables = {
 
     ip_tf = "${var.ip_tf1}"
-    link_api_to_tf = "${google_cloudfunctions_function.api-to-tf.https_trigger_url}"
+    link_api_to_tf = "${google_cloudfunctions_function.apiToTF.https_trigger_url}"
   }
 }
 

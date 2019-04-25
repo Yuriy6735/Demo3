@@ -1,5 +1,5 @@
 import unittest
-from save-to-db.main import message_from_topic1
+from saveToDB.main import message_from_topic1
 
 
 class MyFunTest(unittest.TestCase):

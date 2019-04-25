@@ -1,11 +1,11 @@
 import unittest
-from get-from-db.main import get_from_db
+from getPredictions.main import get_predictions
 
 
 class MyFunTest(unittest.TestCase):
 
     def test_negative(self):
-        self.assertEquals(get_from_db(""), 0)
+        self.assertEquals(get_predictions("") )
 
 
 if __name__ == '__main__':

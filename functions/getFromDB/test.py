@@ -1,11 +1,11 @@
 import unittest
-from to-zamb.main import message_from_topic2
+from getFromDB.main import get_from_db
 
 
 class MyFunTest(unittest.TestCase):
 
     def test_negative(self):
-        self.assertEquals(message_from_topic2("", self), 0)
+        self.assertEquals(get_from_db(""), 0)
 
 
 if __name__ == '__main__':
