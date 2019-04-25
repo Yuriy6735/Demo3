@@ -52,9 +52,9 @@ podTemplate(label: label, containers: [
                         echo "My secret text is '${GOOGLE_CREDENTIALS}'"
                         sh 'mkdir -p creds'
                         sh "cp \$GOOGLE_CREDENTIALS ./creds/d3tf-b894abb5e1c0.json"
-                        sh 'terraform init'
-                        sh 'terraform plan -out myplan'
-                        sh 'terraform apply -auto-approve -input=false myplan'
+                        //sh 'terraform init'
+                        //sh 'terraform plan -out myplan'
+                        //sh 'terraform apply -auto-approve -input=false myplan'
                         //sh 'terraform destroy -auto-approve -input=false'
                     }
                     }
