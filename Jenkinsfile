@@ -1,5 +1,14 @@
 def label = "jenpod"
 
+properties(
+    [
+        parameters(
+            [string(defaultValue: '/data', name: 'Directory'),
+            , string(defaultValue: 'Dev', name: 'DEPLOY_ENV')]
+            )
+
+    ]
+    )
 
 podTemplate(label: label, containers: [
   containerTemplate(name: 'python3', image: 'python:3', command: 'cat', ttyEnabled: true),
