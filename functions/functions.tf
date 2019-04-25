@@ -33,16 +33,16 @@ resource "google_storage_bucket_object" "save-to-db" {
   source = "./functions/save-to-db/save-to-db.zip"
 }
 
-data "archive_file" "current-temp" {
+data "archive_file" "currentTemp" {
   type        = "zip"
-  source_dir  = "./functions/current-temp/current-temp"
-  output_path = "./functions/current-temp/current-temp.zip"
+  source_dir  = "./functions/currentTemp/currentTemp"
+  output_path = "./functions/currentTemp/currentTemp.zip"
 }
 
-resource "google_storage_bucket_object" "current-temp" {
-  name   = "current-temp.${data.archive_file.current-temp.output_base64sha256}.zip"
+resource "google_storage_bucket_object" "currentTemp" {
+  name   = "currentTemp.${data.archive_file.currentTemp.output_base64sha256}.zip"
   bucket = "${google_storage_bucket.bucket.name}"
-  source = "./functions/current-temp/current-temp.zip"
+  source = "./functions/currentTemp/currentTemp.zip"
 }
 
 data "archive_file" "zamb" {
@@ -161,12 +161,12 @@ resource "google_cloudfunctions_function" "save-to-db" {
 
 }
 
-resource "google_cloudfunctions_function" "current-temp" {
-  name                  = "current-temp"
+resource "google_cloudfunctions_function" "currentTemp" {
+  name                  = "currentTemp"
   description           = "My weather"
   available_memory_mb   = 256
   source_archive_bucket = "${google_storage_bucket.bucket.name}"
-  source_archive_object = "${google_storage_bucket_object.current-temp.name}"
+  source_archive_object = "${google_storage_bucket_object.currentTemp.name}"
   timeout               = 60
   runtime               = "python37"
   entry_point           = "message_from_topic3"

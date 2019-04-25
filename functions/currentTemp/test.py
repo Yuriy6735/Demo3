@@ -1,5 +1,5 @@
 import unittest
-from current-temp.main import message_from_topic3
+from currentTemp.main import message_from_topic3
 
 
 class MyFunTest(unittest.TestCase):
