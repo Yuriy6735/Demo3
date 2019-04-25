@@ -11,98 +11,98 @@ resource "google_storage_bucket" "bucket" {
 
 data "archive_file" "app" {
   type        = "zip"
-  source_dir  = "./functions/app"
-  output_path = "./functions/app.zip"
+  source_dir  = "./functions/app/app"
+  output_path = "./functions/app/app.zip"
 }
 
 resource "google_storage_bucket_object" "app" {
   name   = "app.${data.archive_file.app.output_base64sha256}.zip"
   bucket = "${google_storage_bucket.bucket.name}"
-  source = "./functions/app.zip"
+  source = "./functions/app/app.zip"
 }
 
 data "archive_file" "save-to-db" {
   type        = "zip"
-  source_dir  = "./functions/save-to-db"
-  output_path = "./functions/save-to-db.zip"
+  source_dir  = "./functions/save-to-db/save-to-db"
+  output_path = "./functions/save-to-db/save-to-db.zip"
 }
 
 resource "google_storage_bucket_object" "save-to-db" {
   name   = "save-to-db.${data.archive_file.save-to-db.output_base64sha256}.zip"
   bucket = "${google_storage_bucket.bucket.name}"
-  source = "./functions/save-to-db.zip"
+  source = "./functions/save-to-db/save-to-db.zip"
 }
 
 data "archive_file" "current-temp" {
   type        = "zip"
-  source_dir  = "./functions/current-temp"
-  output_path = "./functions/current-temp.zip"
+  source_dir  = "./functions/current-temp/current-temp"
+  output_path = "./functions/current-temp/current-temp.zip"
 }
 
 resource "google_storage_bucket_object" "current-temp" {
   name   = "current-temp.${data.archive_file.current-temp.output_base64sha256}.zip"
   bucket = "${google_storage_bucket.bucket.name}"
-  source = "./functions/current-temp.zip"
+  source = "./functions/current-temp/current-temp.zip"
 }
 
 data "archive_file" "zamb" {
   type        = "zip"
-  source_dir  = "./functions/zamb"
-  output_path = "./functions/zamb.zip"
+  source_dir  = "./functions/zamb/zamb"
+  output_path = "./functions/zamb/zamb.zip"
 }
 
 resource "google_storage_bucket_object" "zamb" {
   name   = "zamb.${data.archive_file.zamb.output_base64sha256}.zip"
   bucket = "${google_storage_bucket.bucket.name}"
-  source = "./functions/zamb.zip"
+  source = "./functions/zamb/zamb.zip"
 }
 
 data "archive_file" "to-zamb" {
   type        = "zip"
-  source_dir  = "./functions/to-zamb"
-  output_path = "./functions/to-zamb.zip"
+  source_dir  = "./functions/to-zamb/to-zamb"
+  output_path = "./functions/to-zamb/to-zamb.zip"
 }
 
 resource "google_storage_bucket_object" "to-zamb" {
   name   = "to-zamb.${data.archive_file.to-zamb.output_base64sha256}.zip"
   bucket = "${google_storage_bucket.bucket.name}"
-  source = "./functions/to-zamb.zip"
+  source = "./functions/to-zamb/to-zamb.zip"
 }
 
 data "archive_file" "get-from-db" {
   type        = "zip"
-  source_dir  = "./functions/get-from-db"
-  output_path = "./functions/get-from-db.zip"
+  source_dir  = "./functions/get-from-db/get-from-db"
+  output_path = "./functions/get-from-db/get-from-db.zip"
 }
 
 resource "google_storage_bucket_object" "get-from-db" {
   name   = "get-from-db.${data.archive_file.get-from-db.output_base64sha256}.zip"
   bucket = "${google_storage_bucket.bucket.name}"
-  source = "./functions/get-from-db.zip"
+  source = "./functions/get-from-db/get-from-db.zip"
 }
 
 data "archive_file" "api-to-tf" {
   type        = "zip"
-  source_dir  = "./functions/api-to-tf"
-  output_path = "./functions/api-to-tf.zip"
+  source_dir  = "./functions/api-to-tf/api-to-tf"
+  output_path = "./functions/api-to-tf/api-to-tf.zip"
 }
 
 resource "google_storage_bucket_object" "api-to-tf" {
   name   = "api-to-tf.${data.archive_file.api-to-tf.output_base64sha256}.zip"
   bucket = "${google_storage_bucket.bucket.name}"
-  source = "./functions/api-to-tf.zip"
+  source = "./functions/api-to-tf/api-to-tf.zip"
 }
 
 data "archive_file" "get-predictions" {
   type        = "zip"
-  source_dir  = "./functions/get-predictions"
-  output_path = "./functions/get-predictions.zip"
+  source_dir  = "./functions/get-predictions/get-predictions"
+  output_path = "./functions/get-predictions/get-predictions.zip"
 }
 
 resource "google_storage_bucket_object" "get-predictions" {
   name   = "get-predictions.${data.archive_file.get-predictions.output_base64sha256}.zip"
   bucket = "${google_storage_bucket.bucket.name}"
-  source = "./functions/get-predictions.zip"
+  source = "./functions/get-predictions/get-predictions.zip"
 }
 
 resource "google_cloudfunctions_function" "get-data" {

@@ -29,6 +29,8 @@ def message_from_topic1(request, message):
     client = MongoClient('mongodb://{0}:{1}@{2}/mysinoptik'.format(user_name,user_pass,ip), 27017)
     db = client.mysinoptik
     collection_weth = db.weather
+    if not request:
+        return 0
     c = request
     b = base64.b64decode(c['data'])
     d = b.decode('utf-8')

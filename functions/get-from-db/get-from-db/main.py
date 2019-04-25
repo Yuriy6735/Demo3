@@ -15,6 +15,8 @@ def get_from_db(request):
     client = pymongo.MongoClient('mongodb://{0}:{1}@{2}/mysinoptik'.format(user_name,user_pass,ip), 27017)
     db = client.mysinoptik
     coll = db.weather
+    if not request:
+        return 0
 #convert JSON request into dict
     arg = json.loads(request.data)
 #convert time string from UI in UNIX time

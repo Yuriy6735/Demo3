@@ -2,7 +2,7 @@ def label = "jenpod"
 
 
 podTemplate(label: label, containers: [
-  containerTemplate(name: 'python-alpine', image: 'python:3-alpine', command: 'cat', ttyEnabled: true),
+  containerTemplate(name: 'python3', image: 'python:3', command: 'cat', ttyEnabled: true),
   containerTemplate(name: 'terraform', image: 'hashicorp/terraform', command: 'cat', ttyEnabled: true)
 ])
 {
@@ -26,12 +26,21 @@ podTemplate(label: label, containers: [
                         userRemoteConfigs: [[url: 'https://github.com/Yuriy6735/Demo3.git']]])
                     }
 
-                //stage("run unit test to app"){
-                //    container("python-alpine"){
-                //        sh "python --version"
-                //        sh "python unit-test.py"
-                //    }
-                //}
+                stage("run units test to app"){
+                    container("python3"){
+                        sh "pip3 install -r ./functions/requirements.txt"
+                        sh "python3 --version"
+                        sh "python3 ./functions/app/test.py"
+                        sh "python3 ./functions/current-temp/test.py"
+                        sh "python3 ./functions/get-from-db/test.py"
+                        sh "python3 ./functions/get-predictions/test.py"
+                        sh "python3 ./functions/save-to-db/test.py"
+                        sh "python3 ./functions/to-zamb/test.py"
+                        //sh "python3 ./functions/zamb/test.py"
+                    }
+                }
+
+
 
 
                 stage('Checkout Terraform') {

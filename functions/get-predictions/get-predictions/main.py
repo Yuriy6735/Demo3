@@ -4,6 +4,8 @@ import os
 
 def get_predictions(request):
     city = request.data.decode("utf-8")
+    if not request:
+        return 0
     if city == "test":
         ip_tf = os.environ.get("ip_tf")
         r_to_tf = requests.post({0}, ip_tf, {1}, data=json.dumps(city) .format("http://", ":80"))
