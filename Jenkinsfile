@@ -31,7 +31,7 @@ podTemplate(label: label, containers: [
                         sh "pip3 install -r ./functions/requirements.txt"
                         sh "python3 --version"
                         sh "python3 ./functions/app/test.py"
-                        sh "python3 ./functions/currenTemp/test.py"
+                        sh "python3 ./functions/currentTemp/test.py"
                         sh "python3 ./functions/get-from-db/test.py"
                         sh "python3 ./functions/get-predictions/test.py"
                         sh "python3 ./functions/save-to-db/test.py"
