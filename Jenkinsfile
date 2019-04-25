@@ -47,15 +47,32 @@ podTemplate(label: label, containers: [
                     container('terraform'){
 
                     //set SECRET with the credential content
-                        sh 'env'
                         sh 'ls -al $GOOGLE_CREDENTIALS'
                         echo "My secret text is '${GOOGLE_CREDENTIALS}'"
                         sh 'mkdir -p creds'
                         sh "cp \$GOOGLE_CREDENTIALS ./creds/d3tf-b894abb5e1c0.json"
                         sh 'terraform init'
                         sh 'terraform plan -out myplan'
-                        sh 'terraform apply -auto-approve -input=false myplan'
+                        //sh 'terraform apply -auto-approve -input=false myplan'
                         //sh 'terraform destroy -auto-approve -input=false'
+                    }
+                    }
+
+                stage('Apply Terraform') {
+                    container('terraform'){
+                        //sh 'terraform apply -auto-approve -input=false myplan'
+                    }
+                    }
+
+                stage('Destroy Terraform?') {
+                    container('terraform'){
+                        input 'Destroy Terraform?'
+                    }
+                    }
+
+                stage('Terraform destroying') {
+                    container('terraform'){
+                        sh 'terraform destroy -auto-approve -input=false'
                     }
                     }
             }
