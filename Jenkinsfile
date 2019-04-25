@@ -1,14 +1,17 @@
 def label = "jenpod"
 
-properties(
-    [
-        parameters(
-            [string(defaultValue: '/data', name: 'Directory'),
-            , string(defaultValue: 'Dev', name: 'DEPLOY_ENV')]
-            )
-
-    ]
-    )
+properties([
+    parameters([
+        stringParam(
+            defaultValue: 'v2.0',
+            description: 'Current version',
+            name: 'imageTagGET_'),
+        stringParam(
+            defaultValue: 'v2.0',
+            description: 'Current version',
+            name: 'imageTagUI_')
+    ])
+])
 
 podTemplate(label: label, containers: [
   containerTemplate(name: 'python3', image: 'python:3', command: 'cat', ttyEnabled: true),
