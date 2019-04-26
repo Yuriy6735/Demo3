@@ -14,7 +14,8 @@ def label = "jenpod"
 //    ])
 //])
 
-properties([parameters([choice(choices: ['terraform apply'], description: '', name: 'apply')])])
+properties([parameters([choice(choices: ['terraform apply'], description: 'apply', name: 'apply'),
+                        choice(choices: ['terraform destroy'], description: 'destroy', name: 'destroy')])])
 
 podTemplate(label: label, containers: [
   containerTemplate(name: 'python3', image: 'python:3', command: 'cat', ttyEnabled: true),
@@ -75,7 +76,7 @@ podTemplate(label: label, containers: [
 
                 stage('Apply Terraform') {
                     container('terraform'){
-                        //sh 'echo ${params.terraform} -auto-approve -input=false myplan
+                        sh 'echo ${params.apply} -auto-approve -input=false myplan
                         //sh 'terraform apply -auto-approve -input=false myplan'
                     }
                     }
@@ -88,7 +89,7 @@ podTemplate(label: label, containers: [
 
                 stage('Terraform destroying') {
                     container('terraform'){
-                        sh 'echo ${params.terraform} -auto-approve -input=false'
+                        sh 'echo ${params.destroy} -auto-approve -input=false'
                         //sh 'terraform destroy -auto-approve -input=false'
                     }
                     }
