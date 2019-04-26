@@ -76,7 +76,7 @@ podTemplate(label: label, containers: [
 
                 stage('Apply Terraform') {
                     container('terraform'){
-                        sh 'echo ${params.apply} -auto-approve -input=false myplan
+                        sh 'echo ${params.apply} -auto-approve -input=false myplan'
                         //sh 'terraform apply -auto-approve -input=false myplan'
                     }
                     }
