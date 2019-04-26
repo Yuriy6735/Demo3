@@ -6,6 +6,7 @@ properties([
             defaultValue: 'v2.0',
             description: 'Current version',
             name: 'imageTagGET_'),
+        choice(choices: ['terraform apply', 'terraform destroy'], description: 'apply or destroy?', name: 'terraform')
         stringParam(
             defaultValue: 'v2.0',
             description: 'Current version',
@@ -72,7 +73,8 @@ podTemplate(label: label, containers: [
 
                 stage('Apply Terraform') {
                     container('terraform'){
-                        sh 'terraform apply -auto-approve -input=false myplan'
+                        //sh 'echo ${params.terraform} -auto-approve -input=false myplan
+                        //sh 'terraform apply -auto-approve -input=false myplan'
                     }
                     }
 
@@ -84,6 +86,7 @@ podTemplate(label: label, containers: [
 
                 stage('Terraform destroying') {
                     container('terraform'){
+                        sh 'echo ${params.terraform} -auto-approve -input=false'
                         //sh 'terraform destroy -auto-approve -input=false'
                     }
                     }
