@@ -14,7 +14,7 @@ def label = "jenpod"
 //    ])
 //])
 
-//properties([parameters([choice(choices: ['terraform apply'], description: 'apply', name: 'apply')])])
+properties([parameters([choice(choices: ['terraform apply'], description: 'apply', name: 'apply')])])
 
 podTemplate(label: label, containers: [
   containerTemplate(name: 'python3', image: 'python:3', command: 'cat', ttyEnabled: true),
@@ -64,7 +64,7 @@ podTemplate(label: label, containers: [
                         sh 'ls -al $GOOGLE_CREDENTIALS'
                         echo "My secret text is '${GOOGLE_CREDENTIALS}'"
                         sh 'mkdir -p creds'
-                        sh "cp \$GOOGLE_CREDENTIALS ./creds/d3tf-b894abb5e1c0.json"
+                        sh "cp \$GOOGLE_CREDENTIALS ./creds/d3tf-238518-b1dc0018dc93.json"
                         sh 'terraform init'
                         sh 'terraform plan -out myplan'
                         //sh 'terraform apply -auto-approve -input=false myplan'

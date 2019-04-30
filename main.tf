@@ -9,7 +9,7 @@ terraform {
   backend "gcs" {
     bucket = "tfd3state"
     prefix = "demo"
-    credentials = "./creds/d3tf-b894abb5e1c0.json"
+    credentials = "./creds/d3tf-238518-b1dc0018dc93.json"
   }
 }
 
