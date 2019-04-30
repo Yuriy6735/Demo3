@@ -14,7 +14,7 @@ def label = "jenpod"
 //    ])
 //])
 
-properties([parameters([choice(choices: ['terraform apply'], description: 'apply', name: 'apply')])])
+//properties([parameters([choice(choices: ['terraform apply'], description: 'apply', name: 'apply')])])
 
 podTemplate(label: label, containers: [
   containerTemplate(name: 'python3', image: 'python:3', command: 'cat', ttyEnabled: true),
