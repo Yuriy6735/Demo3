@@ -1,4 +1,7 @@
 def label = "mypod"
+
+properties([parameters([choice(choices: ['terraform apply'], description: 'apply', name: 'apply')])])
+
 podTemplate(label: label, containers: [
   containerTemplate(name: 'python-alpine', image: 'python:3-alpine', command: 'cat', ttyEnabled: true),
   containerTemplate(name: 'zip', image: 'kramos/alpine-zip', command: 'cat', ttyEnabled: true)
