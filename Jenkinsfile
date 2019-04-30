@@ -1,64 +1,31 @@
-pipeline {
-  agent {
-    kubernetes {
-      label 'mypod'
-      defaultContainer 'jnlp'
-      yaml """
-apiVersion: v1
-kind: Pod
-metadata:
-  labels:
-    some-label: some-label-value
-spec:
-  containers:
-  - name: python
-    image: python
-    command:
-    - cat
-    tty: true
-  - name: zip
-    image: kramos/alpine-zip
-    command:
-    - cat
-    tty: true
-  - name: terraform
-    image: hashicorp/terraform
-    command:
-    - cat
-    tty: true
-"""
-    }
-  }
+def label = "mypod"
+podTemplate(label: label, containers: [
+  containerTemplate(name: 'python-alpine', image: 'python:3-alpine', command: 'cat', ttyEnabled: true),
+  containerTemplate(name: 'zip', image: 'kramos/alpine-zip', command: 'cat', ttyEnabled: true)
+])
+{
+    node(label)
+    {
+        try {
+            stage('Clone repo'){
+                checkout([$class: 'GitSCM', branches: [[name: '*/test1']],
+                    userRemoteConfigs: [[url: 'https://github.com/Yuriy6735/Demo3.git']]])
+                }
 
-  environment {
-    SVC_ACCOUNT_KEY = credentials('terraform-auth')
-  }
-
-  stages {
-
-    stage('Clone repo') {
-      steps {
-      checkout([$class: 'GitSCM', branches: [[name: '*/test1']],
-        userRemoteConfigs: [[url: 'https://github.com/Yuriy6735/Demo3.git']]])
-      }
-    }
-    stage("python"){
-      steps {
-      container("python"){
-        sh "python --version"
-
+            stage("run in one container"){
+                container("python-alpine"){
+                    sh "python --version"
+                    // and other commands to run
+                }
+            }
+            stage("run in other container"){
+                container('zip'){
+                    sh "zip -v"
+                }
+            }
         }
-      }
-    }
-
-    stage("zip"){
-      steps {
-      container('zip'){
-
-        sh "zip -v"
+        catch(err){
+            currentBuild.result = 'Failure'
         }
-      }
     }
-
-  }
 }
