@@ -1,35 +1,93 @@
-# Configure the GCP Provider
-provider "google" {
-  credentials = "${file("./creds/first-project-7961f812579a.json")}"
-  region = "europe-west1"
-  project = "project1-232817"
+#################
+### Variables ###
+#################
+variable "username" {
+  default = "admin"
 }
 
-resource "google_storage_bucket" "bucket" {
-  name = "superpuperdemo3"
-  location = "EU"
-
-}
-
-resource "google_storage_bucket_object" "app" {
-  name = "app.zip"
-  bucket = "${google_storage_bucket.bucket.name}"
-  source = "./app.zip"
-
-}
-
-resource "google_cloudfunctions_function" "get-data" {
-  name                  = "get-data"
-  description           = "My weather"
-  available_memory_mb   = 256
-  source_archive_bucket = "${google_storage_bucket.bucket.name}"
-  source_archive_object = "${google_storage_bucket_object.app.name}"
-  trigger_http          = true
-  timeout               = 60
-  runtime               = "python37"
-  entry_point           = "test_jenkins"
-  labels = {
-    my-label = "my-label-value"
+terraform {
+  backend "gcs" {
+    bucket = "tfd3state"
+    prefix = "demo"
+    credentials = "./creds/d3tf-b894abb5e1c0.json"
   }
+}
 
+variable "password" {}
+
+variable "MONGODB_DATABASE" {
+  default = "mysinoptik"
+}
+
+variable "MONGODB_USERNAME" {
+  default = "main_admin"
+}
+
+variable "MONGODB_PASSWORD" {}
+variable "MONGODB_ROOT_PASSWORD" {}
+
+variable "project" {}
+
+variable "region" {
+  default = "europe-west1"
+
+}
+variable "api_telegram" {}
+
+variable "bucket" {
+  description = "my bucket"
+//  export TF_VAR_bucket=api_app
+}
+
+variable "API" {
+  description = "API Key"
+//  export TF_VAR_API=....
+}
+
+//variable "ip_tf" {
+//  description = "ip_tf"
+////  export TF_VAR_API=....
+//}
+
+
+###############
+### Modules ###
+###############
+module "gke" {
+  source   = "./gke"
+  project  = "${var.project}"
+  region   = "${var.region}"
+  username = "${var.username}"
+  password = "${var.password}"
+}
+
+module "k8s" {
+  source                 = "./k8s"
+  host                   = "${module.gke.host}"
+  username               = "${var.username}"
+  password               = "${var.password}"
+  MONGODB_DATABASE       = "${var.MONGODB_DATABASE}"
+  MONGODB_USERNAME       = "${var.MONGODB_USERNAME}"
+  MONGODB_PASSWORD       = "${var.MONGODB_PASSWORD}"
+  MONGODB_ROOT_PASSWORD  = "${var.MONGODB_ROOT_PASSWORD}"
+  client_certificate     = "${module.gke.client_certificate}"
+  client_key             = "${module.gke.client_key}"
+  cluster_ca_certificate = "${module.gke.cluster_ca_certificate}"
+  api_telegram = "${var.api_telegram}"
+//  ip_redis = "${module.k8s.ip_redis}"
+//  ip_tf1 = "${module.k8s.ip_tf1}"
+}
+
+
+module "functions" {
+  project  = "${var.project}"
+  source = "./functions"
+  region = "${var.region}"
+  bucket = "${var.bucket}"
+  API = "${var.API}"
+  service = "${module.k8s.ip}"
+  ip_redis = "${module.k8s.ip_redis}"
+  ip_tf1 = "${module.k8s.ip_tf1}"
+  MONGODB_PASSWORD = "${var.MONGODB_PASSWORD}"
+  MONGODB_ROOT_PASSWORD = "${var.MONGODB_ROOT_PASSWORD}"
 }
