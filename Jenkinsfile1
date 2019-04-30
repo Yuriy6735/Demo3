@@ -1,5 +1,21 @@
 def label = "jenpod"
 
+//properties([
+//    parameters([
+//        stringParam(
+//            defaultValue: 'v2.0',
+//            description: 'Current version',
+//            name: 'imageTagGET_'),
+//        choice(choices: ['terraform apply', 'terraform destroy'], description: 'apply or destroy?', name: 'terraform')
+//        stringParam(
+//            defaultValue: 'v2.0',
+//            description: 'Current version',
+//            name: 'imageTagUI_')
+//    ])
+//])
+
+properties([parameters([choice(choices: ['terraform apply'], description: 'apply', name: 'apply')])])
+
 podTemplate(label: label, containers: [
   containerTemplate(name: 'python3', image: 'python:3', command: 'cat', ttyEnabled: true),
   containerTemplate(name: 'terraform', image: 'hashicorp/terraform', command: 'cat', ttyEnabled: true)
