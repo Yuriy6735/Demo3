@@ -14,7 +14,7 @@ def label = "jenpod"
 //    ])
 //])
 
-properties([parameters([choice(choices: ['terraform apply', 'terraform destroy'], description: 'apply', name: 'apply')])])
+properties([parameters([choice(choices: ['terraform apply'], description: 'apply', name: 'apply')])])
 
 podTemplate(label: label, containers: [
   containerTemplate(name: 'python3', image: 'python:3', command: 'cat', ttyEnabled: true),
@@ -22,8 +22,7 @@ podTemplate(label: label, containers: [
 ])
 {
 
-    node(label)
-    {
+    node(label){
         try {
             withCredentials([file(credentialsId: 'terraform', variable: 'GOOGLE_CREDENTIALS'),
                                  string(credentialsId: 'TF_VAR_password', variable: 'TF_VAR_password'),
@@ -75,12 +74,12 @@ podTemplate(label: label, containers: [
 
                 stage('Apply Terraform') {
                     container('terraform'){
-                         if (${params.apply} == 'terraform apply') {
-                            sh 'terraform apply -auto-approve -input=false myplan'
-                         }
-                         else {
-                            sh 'terraform destroy -auto-approve -input=false'
-                    }
+                         //if (${params.apply} == 'terraform apply') {
+                         //   sh 'terraform apply -auto-approve -input=false myplan'
+                         //}
+                         //else {
+                         //   sh 'terraform destroy -auto-approve -input=false'
+                    //}
                     }
                 }
 
