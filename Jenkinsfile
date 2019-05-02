@@ -22,7 +22,9 @@ podTemplate(label: label, containers: [
                              ]) {
 
                 if (params.apply == 'terraform destroy') {
-
+                    sh 'terraform destroy -auto-approve -input=false'
+                }
+                else{
                     stage('Clone repo'){
                         //git url: 'https://github.com/Yuriy6735/Demo3.git'
                         checkout([$class: 'GitSCM', branches: [[name: '*/test1']],
@@ -63,10 +65,10 @@ podTemplate(label: label, containers: [
 
                     stage('Apply Terraform') {
                         container('terraform'){
-                             if (params.apply == 'terraform apply') {
-                                echo "hello"
-                                sh 'terraform apply -auto-approve -input=false myplan'
-                             }
+                             //if (params.apply == 'terraform apply') {
+                             //   echo "hello"
+                             sh 'terraform apply -auto-approve -input=false myplan'
+                             //}
                              //else {
                               //  sh 'terraform destroy -auto-approve -input=false'
                              //}
