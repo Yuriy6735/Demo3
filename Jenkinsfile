@@ -1,15 +1,30 @@
-def label = "mypod"
+def label = "jenpod"
+
+//properties([
+//    parameters([
+//        stringParam(
+//            defaultValue: 'v2.0',
+//            description: 'Current version',
+//            name: 'imageTagGET_'),
+//        choice(choices: ['terraform apply', 'terraform destroy'], description: 'apply or destroy?', name: 'terraform')
+//        stringParam(
+//            defaultValue: 'v2.0',
+//            description: 'Current version',
+//            name: 'imageTagUI_')
+//    ])
+//])
 
 properties([parameters([choice(choices: ['terraform apply'], description: 'apply', name: 'apply')])])
 
 podTemplate(label: label, containers: [
-  containerTemplate(name: 'python-alpine', image: 'python:3-alpine', command: 'cat', ttyEnabled: true),
-  containerTemplate(name: 'zip', image: 'kramos/alpine-zip', command: 'cat', ttyEnabled: true)
+  containerTemplate(name: 'python3', image: 'python:3', command: 'cat', ttyEnabled: true),
+  containerTemplate(name: 'terraform', image: 'hashicorp/terraform', command: 'cat', ttyEnabled: true)
 ])
 {
-    node(label)
-    {
-        withCredentials([file(credentialsId: 'terraform', variable: 'GOOGLE_CREDENTIALS'),
+
+    node(label){
+        try {
+            withCredentials([file(credentialsId: 'terraform', variable: 'GOOGLE_CREDENTIALS'),
                                  string(credentialsId: 'TF_VAR_password', variable: 'TF_VAR_password'),
                                  string(credentialsId: 'TF_VAR_api_telegram', variable: 'TF_VAR_api_telegram'),
                                  string(credentialsId: 'TF_VAR_MONGODB_PASSWORD', variable: 'TF_VAR_MONGODB_PASSWORD'),
@@ -18,27 +33,78 @@ podTemplate(label: label, containers: [
                                  string(credentialsId: 'TF_VAR_project', variable: 'TF_VAR_project'),
                                  string(credentialsId: 'TF_VAR_MONGODB_ROOT_PASSWORD', variable: 'TF_VAR_MONGODB_ROOT_PASSWORD')
                              ]) {
-            try {
+
                 stage('Clone repo'){
+                    //git url: 'https://github.com/Yuriy6735/Demo3.git'
                     checkout([$class: 'GitSCM', branches: [[name: '*/test1']],
                         userRemoteConfigs: [[url: 'https://github.com/Yuriy6735/Demo3.git']]])
                     }
 
-                stage("run in one container"){
-                    container("python-alpine"){
-                        sh "python --version"
-                        // and other commands to run
+                stage("run units test to app"){
+                    container("python3"){
+                        sh "pip3 install -r ./functions/requirements.txt"
+                        sh "python3 --version"
+                        sh "python3 ./functions/app/test.py"
+                        sh "python3 ./functions/currentTemp/test.py"
+                        sh "python3 ./functions/getFromDB/test.py"
+                        sh "python3 ./functions/getPredictions/test.py"
+                        sh "python3 ./functions/saveToDB/test.py"
+                        sh "python3 ./functions/toZamb/test.py"
+                        //sh "python3 ./functions/zamb/test.py"
                     }
                 }
-                stage("run in other container"){
-                    container('zip'){
-                        sh "zip -v"
+
+
+
+
+                stage('Checkout Terraform') {
+                    container('terraform'){
+
+                    //set SECRET with the credential content
+                        sh 'ls -al $GOOGLE_CREDENTIALS'
+                        echo "My secret text is '${GOOGLE_CREDENTIALS}'"
+                        sh 'mkdir -p creds'
+                        sh "cp \$GOOGLE_CREDENTIALS ./creds/d3tf-238518-b1dc0018dc93.json"
+                        sh 'terraform init'
+                        sh 'terraform plan -out myplan'
+                        //sh 'terraform apply -auto-approve -input=false myplan'
+                        //sh 'terraform destroy -auto-approve -input=false'
+                    }
+                    }
+
+                stage('Apply Terraform') {
+                    container('terraform'){
+                         if (${params.apply} == 'terraform apply') {
+                            sh 'terraform apply -auto-approve -input=false myplan'
+                         }
+                         else {
+                            sh 'terraform destroy -auto-approve -input=false'
+                         }
                     }
                 }
+
+
+                stage('Destroy Terraform?') {
+                    container('terraform'){
+                        //input 'Destroy Terraform?'
+                    }
+                    }
+
+                stage('Terraform destroying') {
+                    container('terraform'){
+                        //sh 'echo ${params.apply} -auto-approve -input=false'
+                        //sh 'terraform destroy -auto-approve -input=false'
+                    }
+                    }
             }
-            catch(err){
-                currentBuild.result = 'Failure'
-            }
-    }
+
+
+
+
+
+        }
+        catch(err){
+            currentBuild.result = 'Failure'
+        }
     }
 }
