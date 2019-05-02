@@ -86,7 +86,7 @@ podTemplate(label: label, containers: [
 
                 stage('Destroy Terraform?') {
                     container('terraform'){
-                        //input 'Destroy Terraform?'
+                        sh 'terraform apply -auto-approve -input=false myplan'
                     }
                     }
 
