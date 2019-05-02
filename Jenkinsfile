@@ -21,32 +21,13 @@ podTemplate(label: label, containers: [
                                  string(credentialsId: 'TF_VAR_MONGODB_ROOT_PASSWORD', variable: 'TF_VAR_MONGODB_ROOT_PASSWORD')
                              ]) {
 
-                if (params.apply == 'terraform destroy') {
-                    sh 'terraform destroy -auto-approve -input=false'
-                }
-                else{
+
+
                     stage('Clone repo'){
                         //git url: 'https://github.com/Yuriy6735/Demo3.git'
                         checkout([$class: 'GitSCM', branches: [[name: '*/test1']],
                             userRemoteConfigs: [[url: 'https://github.com/Yuriy6735/Demo3.git']]])
                         }
-
-                    stage("run units test to app"){
-                        container("python3"){
-                            sh "pip3 install -r ./functions/requirements.txt"
-                            sh "python3 --version"
-                            sh "python3 ./functions/app/test.py"
-                            sh "python3 ./functions/currentTemp/test.py"
-                            sh "python3 ./functions/getFromDB/test.py"
-                            sh "python3 ./functions/getPredictions/test.py"
-                            sh "python3 ./functions/saveToDB/test.py"
-                            sh "python3 ./functions/toZamb/test.py"
-                            //sh "python3 ./functions/zamb/test.py"
-                        }
-                    }
-
-
-
 
                     stage('Checkout Terraform') {
                         container('terraform'){
@@ -63,6 +44,29 @@ podTemplate(label: label, containers: [
                         }
                         }
 
+                if (params.apply == 'terraform destroy') {
+                    stage('Destroy Terraform?') {
+                        container('terraform'){
+                            sh 'terraform destroy -auto-approve -input=false'
+                        }
+                        }
+                }
+                else{
+                    stage("run units test to app"){
+                        container("python3"){
+                            sh "pip3 install -r ./functions/requirements.txt"
+                            sh "python3 --version"
+                            sh "python3 ./functions/app/test.py"
+                            sh "python3 ./functions/currentTemp/test.py"
+                            sh "python3 ./functions/getFromDB/test.py"
+                            sh "python3 ./functions/getPredictions/test.py"
+                            sh "python3 ./functions/saveToDB/test.py"
+                            sh "python3 ./functions/toZamb/test.py"
+                            //sh "python3 ./functions/zamb/test.py"
+                        }
+                    }
+
+
                     stage('Apply Terraform') {
                         container('terraform'){
                              //if (params.apply == 'terraform apply') {
@@ -76,18 +80,6 @@ podTemplate(label: label, containers: [
                     }
 
 
-                    stage('Destroy Terraform?') {
-                        container('terraform'){
-                            //sh 'terraform apply -auto-approve -input=false myplan'
-                        }
-                        }
-
-                    stage('Terraform destroying') {
-                        container('terraform'){
-                            //sh 'echo ${params.apply} -auto-approve -input=false'
-                            //sh 'terraform destroy -auto-approve -input=false'
-                        }
-                        }
                 }
             }
 
