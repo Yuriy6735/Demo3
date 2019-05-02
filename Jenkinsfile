@@ -74,12 +74,13 @@ podTemplate(label: label, containers: [
 
                 stage('Apply Terraform') {
                     container('terraform'){
-                         if (${params.apply} == 'terraform apply') {
-                            sh 'terraform apply -auto-approve -input=false myplan'
-                         }
-                         else {
-                            sh 'terraform destroy -auto-approve -input=false'
-                         }
+                         sh 'terraform destroy -auto-approve -input=false'
+                         //if (${params.apply} == 'terraform apply') {
+                         //   sh 'terraform apply -auto-approve -input=false myplan'
+                         //}
+                         //else {
+                         //   sh 'terraform destroy -auto-approve -input=false'
+                         //}
                     }
                 }
 
