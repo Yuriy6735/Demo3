@@ -76,11 +76,6 @@ podTemplate(label: label, containers: [
                 }
             }
 
-
-
-
-
-        }
         catch(err){
             currentBuild.result = 'Failure'
         }
