@@ -23,8 +23,7 @@ podTemplate(label: label, containers: [
 
 
 
-                    stage('Clone repo'){
-                        //git url: 'https://github.com/Yuriy6735/Demo3.git'
+                    stage('Checkout repo'){
                         checkout([$class: 'GitSCM', branches: [[name: '*/test1']],
                             userRemoteConfigs: [[url: 'https://github.com/Yuriy6735/Demo3.git']]])
                         }
@@ -34,7 +33,6 @@ podTemplate(label: label, containers: [
 
                         //set SECRET with the credential content
                             sh 'ls -al $GOOGLE_CREDENTIALS'
-                            echo "My secret text is '${GOOGLE_CREDENTIALS}'"
                             sh 'mkdir -p creds'
                             sh "cp \$GOOGLE_CREDENTIALS ./creds/d3tf-238518-b1dc0018dc93.json"
                             sh 'terraform init'
@@ -45,14 +43,14 @@ podTemplate(label: label, containers: [
                         }
 
                 if (params.apply == 'terraform destroy') {
-                    stage('Destroy Terraform?') {
+                    stage('Destroy Terraform') {
                         container('terraform'){
                             sh 'terraform destroy -auto-approve -input=false'
                         }
                         }
                 }
                 else{
-                    stage("run units test to app"){
+                    stage("Run unit tests"){
                         container("python3"){
                             sh "pip3 install -r ./functions/requirements.txt"
                             sh "python3 --version"
@@ -69,13 +67,8 @@ podTemplate(label: label, containers: [
 
                     stage('Apply Terraform') {
                         container('terraform'){
-                             //if (params.apply == 'terraform apply') {
-                             //   echo "hello"
                              sh 'terraform apply -auto-approve -input=false myplan'
-                             //}
-                             //else {
-                              //  sh 'terraform destroy -auto-approve -input=false'
-                             //}
+                             }
                         }
                     }
 
