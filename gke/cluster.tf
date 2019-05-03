@@ -4,7 +4,7 @@
 resource "google_container_cluster" "mongodb" {
   name               = "mongodb"
   region               = "${var.region}"
-  initial_node_count = 1
+  initial_node_count = 2
 
   addons_config {
     network_policy_config {
