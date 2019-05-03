@@ -1,4 +1,4 @@
 #ignore folders .terraform and .idea
-.terraform
-.idea
+.terraform/
+.idea/
 *.tfstate
