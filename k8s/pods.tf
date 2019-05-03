@@ -5,6 +5,7 @@
 resource "kubernetes_deployment" "mongo-master" {
   metadata {
     name = "mongo-master"
+    namespace = "${kubernetes_namespace.mongo_space.metadata.0.name}"
 
     labels {
       app  = "mongo"
@@ -77,6 +78,7 @@ resource "kubernetes_deployment" "mongo-master" {
 resource "kubernetes_deployment" "redis-master" {
   metadata {
     name = "redis-master"
+    namespace = "${kubernetes_namespace.redis_space.metadata.0.name}"
 
     labels {
       app  = "redis"
@@ -209,59 +211,59 @@ resource "kubernetes_deployment" "jupyter-notebook" {
 }
 
 
-//resource "kubernetes_deployment" "telebot" {
-//  metadata {
-//    name = "telebot"
-//
-//    labels {
-//      app  = "telebot"
-//      role = "master"
-//      tier = "backend"
-//    }
-//  }
-//
-//  spec {
-//    replicas = 1
-//
-//    selector = {
-//      match_labels {
-//        app  = "telebot"
-//        role = "master"
-//        tier = "backend"
-//      }
-//    }
-//
-//    template {
-//      metadata {
-//        labels {
-//          app  = "telebot"
-//          role = "master"
-//          tier = "backend"
-//        }
-//      }
-//
-//      spec {
-//        container {
-//          image = "denizka/telebot:v0.3"
-//          name  = "master"
-//          /*env {
-//            name  = "api_telegram"
-//            value = "${var.api_telegram}"
-//          }
-//          env {
-//            name  = "ip_redis"
-//            value = "${kubernetes_service.redis-master.load_balancer_ingress.0.ip}"
-//          }*/
-//          resources {
-//            requests {
-//              cpu    = "100m"
-//              memory = "100Mi"
-//          }}
-//        }
-//      }
-//    }
-//  }
-//}
+resource "kubernetes_deployment" "telebot" {
+  metadata {
+    name = "telebot"
+
+    labels {
+      app  = "telebot"
+      role = "master"
+      tier = "backend"
+    }
+  }
+
+  spec {
+    replicas = 1
+
+    selector = {
+      match_labels {
+        app  = "telebot"
+        role = "master"
+        tier = "backend"
+      }
+    }
+
+    template {
+      metadata {
+        labels {
+          app  = "telebot"
+          role = "master"
+          tier = "backend"
+        }
+      }
+
+      spec {
+        container {
+          image = "denizka/telebot:v0.3"
+          name  = "master"
+          /*env {
+            name  = "api_telegram"
+            value = "${var.api_telegram}"
+          }
+          env {
+            name  = "ip_redis"
+            value = "${kubernetes_service.redis-master.load_balancer_ingress.0.ip}"
+          }*/
+          resources {
+            requests {
+              cpu    = "100m"
+              memory = "100Mi"
+          }}
+        }
+      }
+    }
+  }
+}
 
 resource "kubernetes_deployment" "tf" {
   metadata {
@@ -298,6 +300,11 @@ resource "kubernetes_deployment" "tf" {
         container {
           image = "yuriy6735/flask"
           name  = "master"
+          command = [ "start-notebook.sh" ]
+            args = [
+              "--NotebookApp.base_url='/jupyterx'",
+              "--NotebookApp.token='secretjupyterxtoken'"
+            ]
 
           port {
             container_port = 80
@@ -315,94 +322,4 @@ resource "kubernetes_deployment" "tf" {
 }
 
 
-
-/*
-resource "kubernetes_replication_controller" "mongo-slave" {
-  metadata {
-    name = "mongo-slave"
-
-    labels {
-      app  = "mongo"
-      role = "slave"
-      tier = "backend"
-    }
-  }
-
-  spec {
-    replicas = 2
-
-    selector = {
-      app  = "mongo"
-      role = "slave"
-      tier = "backend"
-    }
-
-    template {
-      container {
-        image = "bitnami/mongodb:latest"
-        name  = "slave"
-
-        port {
-          container_port = 27017
-        }
-
-        env {
-          name  = "GET_HOSTS_FROM"
-          value = "dns"
-        }
-
-        resources {
-          requests {
-            cpu    = "100m"
-            memory = "100Mi"
-          }
-        }
-      }
-    }
-  }
-}
-
-resource "kubernetes_replication_controller" "frontend" {
-  metadata {
-    name = "frontend"
-
-    labels {
-      app  = "mongodb"
-      tier = "frontend"
-    }
-  }
-
-  spec {
-    replicas = 3
-
-    selector = {
-      app  = "mongodb"
-      tier = "frontend"
-    }
-
-    template {
-      container {
-        image = "bitnami/mongodb:latest"
-        name  = "slave-2"
-
-        port {
-          container_port = 27017
-        }
-
-        env {
-          name  = "GET_HOSTS_FROM"
-          value = "dns"
-        }
-
-        resources {
-          requests {
-            cpu    = "100m"
-            memory = "100Mi"
-          }
-        }
-      }
-    }
-  }
-}
-*/
 

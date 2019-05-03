@@ -1,0 +1,48 @@
+    [Global]
+      debug = true
+
+    [entrypoints]
+      [entrypoints.web]
+          address = ":80"
+      [entrypoints.mongo-port]
+          address = ":27017"
+      [entrypoints.redis-port]
+          address = ":6379"
+
+    [providers]
+      [providers.file]
+
+
+    [tcp] # YAY!
+      [tcp.routers]
+          [tcp.routers.everything-to-mongo]
+            entrypoints = ["mongo-port"]
+            rule = "HostSNI(`*`)" # Catches every request       
+            service = "database"
+          [tcp.routers.everything-to-redis]
+            entrypoints = ["redis-port"]
+            rule = "HostSNI(`*`)"
+            service = "fastdb"
+
+      [tcp.services]
+        [tcp.services.database.LoadBalancer]
+          [[tcp.services.database.LoadBalancer.servers]]
+            address = "mongo-master.mspace.svc:27017"
+        [tcp.services.fastdb.LoadBalancer]
+          [[tcp.services.fastdb.LoadBalancer.servers]]
+            address = "redis-master.rspace.svc:6379"
+
+    [http] # yakscho ne ide - pribrati
+      [http.routers]
+        [http.routers.for-jupyterx]
+          entryPoints = ["web-secure", "web"] # won't listen to entrypoint mongo-port
+          # rule = "Host(`clients-ui.ddns.net`)"
+          # rule = "Path(`/jupyterx`)" # abo /jupyterx/*
+          rule = "PathPrefix(`/jupyterx`)"
+          service = "jupyterx"
+      [http.services]
+        [http.services.jupyterx.LoadBalancer]
+        PassHostHeader = true
+        [[http.services.jupyterx.LoadBalancer.servers]]
+        url = "http://jupyter-service.default.svc/"
+        weight = 100

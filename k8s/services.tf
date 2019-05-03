@@ -4,6 +4,7 @@
 resource "kubernetes_service" "mongo-master" {
   metadata {
     name = "mongo-master"
+    namespace = "${kubernetes_namespace.mongo_space.metadata.0.name}"
 
     labels {
       app  = "mongo"
@@ -19,7 +20,7 @@ resource "kubernetes_service" "mongo-master" {
       tier = "backend"
     }
 
-    type = "LoadBalancer"
+    type = "ClusterIP"
 
     port {
       port        = 27017
@@ -28,13 +29,11 @@ resource "kubernetes_service" "mongo-master" {
   }
 }
 
-output "ip" {
-  value = "${kubernetes_service.mongo-master.load_balancer_ingress.0.ip}"
-}
 
 resource "kubernetes_service" "redis-master" {
   metadata {
     name = "redis-master"
+    namespace = "${kubernetes_namespace.redis_space.metadata.0.name}"
 
     labels {
       app  = "redis"
@@ -50,7 +49,7 @@ resource "kubernetes_service" "redis-master" {
       tier = "backend"
     }
 
-    type = "LoadBalancer"
+    type = "ClusterIP"
 
     port {
       port        = 6379
@@ -59,9 +58,6 @@ resource "kubernetes_service" "redis-master" {
   }
 }
 
-output "ip_redis" {
-  value = "${kubernetes_service.redis-master.load_balancer_ingress.0.ip}"
-}
 
 
 resource "kubernetes_service" "jupyter-balancer" {
@@ -82,7 +78,7 @@ resource "kubernetes_service" "jupyter-balancer" {
       tier = "backend"
     }
 
-    type = "LoadBalancer"
+    type = "ClusterIP"
 
     port {
       port        = 80
@@ -91,29 +87,29 @@ resource "kubernetes_service" "jupyter-balancer" {
   }
 }
 
-//resource "kubernetes_service" "telebot" {
-//  metadata {
-//    name = "telebot"
-//
-//    labels {
-//      app  = "telebot"
-//      role = "master"
-//      tier = "backend"
-//    }
-//  }
-//
-//  spec {
-//    selector {
-//      app  = "telebot"
-//      role = "master"
-//      tier = "backend"
-//    }
-//    port {
-//      port        = 80
-//    }
-//
-//  }
-//}
+resource "kubernetes_service" "telebot" {
+  metadata {
+    name = "telebot"
+
+    labels {
+      app  = "telebot"
+      role = "master"
+      tier = "backend"
+    }
+  }
+
+  spec {
+    selector {
+      app  = "telebot"
+      role = "master"
+      tier = "backend"
+    }
+    port {
+      port        = 80
+    }
+
+  }
+}
 
 resource "kubernetes_service" "tf" {
   metadata {
@@ -133,7 +129,7 @@ resource "kubernetes_service" "tf" {
       tier = "backend"
     }
 
-    type = "LoadBalancer"
+    type = "ClusterIP"
 
     port {
       port        = 80
@@ -143,58 +139,5 @@ resource "kubernetes_service" "tf" {
   }
 }
 
-output "ip_tf1" {
-  value = "${kubernetes_service.tf.load_balancer_ingress.0.ip}"
-}
 
-/*
-resource "kubernetes_service" "mongo-slave" {
-  metadata {
-    name = "mongo-slave"
-
-    labels {
-      app  = "mongo"
-      role = "slave"
-      tier = "backend"
-    }
-  }
-
-  spec {
-    selector {
-      app  = "mongo"
-      role = "slave"
-      tier = "backend"
-    }
-
-    port {
-      port        = 27017
-      target_port = 27017
-    }
-  }
-}
-
-resource "kubernetes_service" "frontend" {
-  metadata {
-    name = "frontend"
-
-    labels {
-      app  = "mongodb"
-      tier = "frontend"
-    }
-  }
-
-  spec {
-    selector {
-      app  = "mongodb"
-      tier = "frontend"
-    }
-
-    type = "LoadBalancer"
-
-    port {
-      port = 27017
-    }
-  }
-}
-*/
 

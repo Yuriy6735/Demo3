@@ -4,16 +4,16 @@
 provider "google" {
   project     = "${var.project}"
   region      = "${var.region}"
-//  credentials = "${file("/home/zambezi/devops/gityura/Demo2/key.json")}"
 }
-/*
-resource "google_compute_address" "default" {
-  name         = "default"
+### Reserving External IP ###
+resource "google_compute_address" "external" {
+  name         = "external"
   address_type = "EXTERNAL"
-  address      = "${var.address}"
   region       = "${var.region}"
 }
-output "ipaddress" {
-  value     = "${google_compute_address.default.address}"
+### Output for K8S (Traefik controller) ###
+
+output "external_ip" {
+  value     = "${google_compute_address.external.address}"
   sensitive = true
-}*/
+}
