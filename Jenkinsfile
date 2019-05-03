@@ -5,7 +5,8 @@ properties([parameters([choice(choices: ['terraform apply', 'terraform destroy']
 
 podTemplate(label: label, containers: [
   containerTemplate(name: 'python3', image: 'python:3', command: 'cat', ttyEnabled: true),
-  containerTemplate(name: 'terraform', image: 'hashicorp/terraform', command: 'cat', ttyEnabled: true)
+  containerTemplate(name: 'terraform', image: 'hashicorp/terraform', command: 'cat', ttyEnabled: true),
+  containerTemplate(name: 'helm', image: 'lachlanevenson/k8s-helm', command: 'cat', ttyEnabled: true)
 ])
 {
 
@@ -67,7 +68,13 @@ podTemplate(label: label, containers: [
 
                     stage('Apply Terraform') {
                         container('terraform'){
-                             sh 'terraform apply -auto-approve -input=false myplan'
+                             //sh 'terraform apply -auto-approve -input=false myplan'
+                             }
+                        }
+
+                    stage('Install monitoring tools') {
+                        container('helm'){
+                             sh 'version'
                              }
                         }
                     }
