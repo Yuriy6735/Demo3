@@ -1,0 +1,62 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: jenkins-ext
+spec:
+  type: LoadBalancer
+  selector:
+    app: jenkins
+  ports:
+  - protocol: TCP
+    port: 8080
+    targetPort: 8080
+---
+
+kind: Service
+apiVersion: v1
+metadata:
+  name: jenkins
+spec:
+  type: ClusterIP
+  selector:
+    app: jenkins
+  ports:
+  - name: name
+    protocol: TCP
+    port: 8080
+    targetPort: 8080
+  - name: name1
+    protocol: TCP
+    port: 50000
+    targetPort: 50000
+
+---
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: jenkins
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: jenkins
+    spec:
+      securityContext:
+        fsGroup: 1000
+        runAsUser: 0
+      containers:
+      - name: jenkins
+        image: yuriy6735/jenkins
+        ports:
+        - containerPort: 8080
+        env:
+          - name: JENKINS_PASS
+            value: ""
+        volumeMounts:
+          - name: jenkins-dada
+            mountPath: "/var/jenkins_home"
+      volumes:
+        - name: jenkins-dada
+          persistentVolumeClaim:
+            claimName: jenkins-pv-claim
