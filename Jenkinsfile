@@ -10,6 +10,7 @@ podTemplate(label: label, containers: [
 ])
 {
 
+
     node(label){
         try {
             withCredentials([file(credentialsId: 'terraform', variable: 'GOOGLE_CREDENTIALS'),
