@@ -74,7 +74,7 @@ podTemplate(label: label, containers: [
 
                     stage('Install monitoring tools') {
                         container('helm'){
-                             sh 'version'
+                             sh 'helm version'
                              }
                         }
                     }
