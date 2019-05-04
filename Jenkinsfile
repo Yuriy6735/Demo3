@@ -5,8 +5,8 @@ properties([parameters([choice(choices: ['terraform apply', 'terraform destroy']
 
 podTemplate(label: label, containers: [
   containerTemplate(name: 'python3', image: 'python:3', command: 'cat', ttyEnabled: true),
-  containerTemplate(name: 'terraform', image: 'hashicorp/terraform', command: 'cat', ttyEnabled: true),
-  containerTemplate(name: 'helm', image: 'lachlanevenson/k8s-helm', command: 'cat', ttyEnabled: true)
+  containerTemplate(name: 'terraform', image: 'hashicorp/terraform', command: 'cat', ttyEnabled: true)
+  //containerTemplate(name: 'helm', image: 'lachlanevenson/k8s-helm', command: 'cat', ttyEnabled: true)
 ])
 {
 
@@ -23,11 +23,11 @@ podTemplate(label: label, containers: [
                              ]) {
 
 
-
                     stage('Checkout repo'){
                         checkout([$class: 'GitSCM', branches: [[name: '*/test1']],
                             userRemoteConfigs: [[url: 'https://github.com/Yuriy6735/Demo3.git']]])
                         }
+
 
                     stage('Checkout Terraform') {
                         container('terraform'){
@@ -41,7 +41,7 @@ podTemplate(label: label, containers: [
                             //sh 'terraform apply -auto-approve -input=false myplan'
                             //sh 'terraform destroy -auto-approve -input=false'
                         }
-                        }
+                    }
 
                 if (params.apply == 'terraform destroy') {
                     stage('Destroy Terraform') {
@@ -72,11 +72,11 @@ podTemplate(label: label, containers: [
                              }
                         }
 
-                    stage('Install monitoring tools') {
-                        container('helm'){
-                             sh 'helm version'
-                             }
-                        }
+                    //stage('Install monitoring tools') {
+                    //    container('helm'){
+                    //         sh ' '
+                    //         }
+                    //    }
                     }
 
 
